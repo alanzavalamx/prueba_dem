@@ -5,8 +5,9 @@ Todo basado en una Arquitectura escalable utilizando Docker para todos los compo
 
 ## 📋 Requisitos previos
 
-* **Docker** (>=20.10)
+* **Docker** (>=20.10) (https://docs.docker.com/desktop/setup/install/windows-install/)
 * **Docker Compose** (>=1.29)
+* Git https://git-scm.com/downloads (o puedes descargar directmente el repositorio)
 * (Opcional) **Cliente MySQL** para validación manual
 
 ## 🗂️ Estructura del proyecto
