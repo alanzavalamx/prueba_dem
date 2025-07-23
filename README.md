@@ -17,16 +17,19 @@ Todo basado en una Arquitectura escalable utilizando Docker para todos los compo
 ├── Dockerfile_mysql
 ├── Dockerfile_dagster
 ├── Dockerfile_user_code
-├── init.sql                  # Creación de DB, tabla y usuario fileciteturn3file0
-├── dagster.yaml             # Configuración de storage en MySQL
+├── init.sql                  # Creación de DB, tabla y usuario 
+├── dagster.yaml             # Configuración de storage en Postgres
 ├── workspace.yaml           # Definición de workspace de Dagster
-├── requirements.txt         # Dependencias de Python fileciteturn3file1
-└── ops/                     # Código del pipeline (transform & load)
+├── requirements.txt         # Dependencias de Python
+└── ops/                     # Código del pipeline
     └── app.py
     └── definitions.py
     └── Matriz_de_adyacencia_data_team.xlsx
 
 ```
+
+Nota: Para cualquier prueba podras sustituir el archivo de Excel dentro de la carpeta ops/ 
+Docker la tiene enlazada la carpeta con un volumen, asi mismo cambios en el codigo de app.py o definitions.py se podran realizar y reflejarse inmediatamente.
 
 ## ⚙️ Configuración de entorno
 
