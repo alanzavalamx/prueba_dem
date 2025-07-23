@@ -1,0 +1,25 @@
+# Dockerfile_dagster
+FROM python:3.10-slim
+
+# Instala Dagster y dependencias
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+# Instala Dagster y drivers necesarios
+RUN pip install --no-cache-dir \
+    dagster \
+    dagster-postgres \
+    dagster-docker \
+    dagster-graphql \
+    dagster-webserver
+
+# Configura el home de Dagster
+ENV DAGSTER_HOME=/opt/dagster/dagster_home
+RUN mkdir -p $DAGSTER_HOME
+
+# Copia la configuración de la instancia
+COPY dagster.yaml workspace.yaml $DAGSTER_HOME/
+
+WORKDIR $DAGSTER_HOME
+
+# Exponer puerto para Dagit
+EXPOSE 3000

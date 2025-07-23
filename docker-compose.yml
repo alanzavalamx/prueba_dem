@@ -1,0 +1,107 @@
+version: '3.7'
+
+services:
+  dagster-db:
+    image: postgres:13
+    container_name: dagster-db
+    environment:
+      POSTGRES_USER: 'postgres_user'
+      POSTGRES_PASSWORD: 'postgres_password'
+      POSTGRES_DB: 'postgres_db'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres_user -d postgres_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dagster-network
+
+  dagster-user-code:
+    build:
+      context: .
+      dockerfile: Dockerfile_user_code
+    container_name: dagster-user-code
+    image: dagster-user-code-image
+    restart: always
+    networks:
+      - dagster-network
+    volumes:
+      - ./ops/:/opt/dagster/app/
+
+  dagster-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile_dagster
+    container_name: dagster-webserver
+    image: dagster-webserver-image
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - '0.0.0.0'
+      - -p
+      - '3000'
+      - -w
+      - workspace.yaml
+    ports:
+      - '3000:3000'
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      POSTGRES_USER: 'postgres_user'
+      POSTGRES_PASSWORD: 'postgres_password'
+      POSTGRES_DB: 'postgres_db'
+    volumes:
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      dagster-db:
+        condition: service_healthy
+      dagster-user-code:
+        condition: service_started
+    networks:
+      - dagster-network
+
+  dagster-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile_dagster
+    container_name: dagster-daemon
+    image: dagster-daemon-image
+    entrypoint:
+      - dagster-daemon
+      - run
+    restart: on-failure
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      POSTGRES_USER: 'postgres_user'
+      POSTGRES_PASSWORD: 'postgres_password'
+      POSTGRES_DB: 'postgres_db'
+    volumes:
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      dagster-db:
+        condition: service_healthy
+      dagster-user-code:
+        condition: service_started
+    networks:
+      - dagster-network
+  mysql-db:
+    build:
+      context: .
+      dockerfile: Dockerfile_mysql        # tu Dockerfile que copia init.sql
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    healthcheck:                   # espera a que MySQL esté listo
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dagster-network
+
+networks:
+  dagster-network:
+    driver: bridge

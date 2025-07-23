@@ -1,0 +1,23 @@
+# Dockerfile_user_code
+FROM python:3.10-slim
+
+# Instala Dagster y drivers necesarios
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+RUN pip install --no-cache-dir \
+    dagster \
+    dagster-postgres \
+    dagster-docker
+
+# Define y crea el directorio de tu aplicación
+WORKDIR /opt/dagster/app
+
+# Copia el código de tus pipelines
+COPY ops/ /opt/dagster/app
+
+# Exponer el puerto gRPC usado por Dagster
+EXPOSE 4000
+
+# Arranca el servidor gRPC de tu código
+CMD ["dagster", "code-server", "start", "-h", "0.0.0.0", "-p", "4000", "-f", "definitions.py"]

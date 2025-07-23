@@ -1,0 +1,6 @@
+# workspace.yaml
+load_from:
+  - grpc_server:
+      host: dagster-user-code   # nombre del servicio Docker que arranca tu code-server
+      port: 4000                # puerto expuesto por ese contenedor
+      location_name: user_code  # identificador que verás en la UI de Dagit

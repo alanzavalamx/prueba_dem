@@ -1,0 +1,12 @@
+FROM mysql:8.0
+
+ENV MYSQL_ROOT_PASSWORD=RootP@ssw0rd
+ENV MYSQL_DATABASE=relationships_db
+ENV MYSQL_USER=PalaceAdmin
+ENV MYSQL_PASSWORD=Str0ngSecurePAssw0rd
+
+COPY ./init.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
+
+VOLUME ["/var/lib/mysql"]
