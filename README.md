@@ -28,7 +28,8 @@ Todo basado en una Arquitectura escalable utilizando Docker para todos los compo
 
 ```
 
-Nota: Para cualquier prueba podras sustituir el archivo de Excel dentro de la carpeta ops/ 
+Nota: Para cualquier prueba podras sustituir el archivo de Excel dentro de la carpeta ops/
+
 Docker la tiene enlazada la carpeta con un volumen, asi mismo cambios en el codigo de app.py o definitions.py se podran realizar y reflejarse inmediatamente.
 
 ## ⚙️ Configuración de entorno
