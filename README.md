@@ -164,4 +164,4 @@ https://dev.mysql.com/downloads/file/?id=539682
 
 ---
 
-Con estos pasos podrás construir, desplegar y probar tu pipeline Dagster con MySQL como backend de datos y de metadata. ¡Éxito!
+Alan Alexis Zavala Mendoza
